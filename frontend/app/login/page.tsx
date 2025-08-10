@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   // If not logged in, show LoginForm
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black text-white">
+    <main className=" min-h-screen items-center justify-center bg-black text-white ">
       <LoginForm />
     </main>
   );

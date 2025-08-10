@@ -27,8 +27,23 @@ body {
 
 @font-face {
   font-family: 'Concreate';
-  src: url('/fonts/concrete.ttf') format('ttf');
+  src: url('/fonts/concrete.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+.font-concreate {
+  font-family: 'Concreate', sans-serif;
+}
+@font-face {
+  font-family: 'Bely';
+  src: url('/fonts/bely.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-bely {
+  font-family: 'Bely', sans-serif;
 }

@@ -9,7 +9,7 @@ const page = () => {
       <div className="bg-green-80 grid grid-cols-3 items-center px-4 py-2 my-4">
         {/* Left text */}
         <div className="text-base font-bold tracking-widest text-white px-4 py-1 max-sm:text-xs">
-          Create Account
+          Back
         </div>
 
         {/* Center text */}
@@ -24,7 +24,7 @@ const page = () => {
       </div>
 
       <div className="w-4/5   sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-3/5 2xl:w-3/5 mx-auto rounded-2xl shadow-2xl  relative  mt-12 max-sm:mb-4">
-        <div className="w-full divide-y-2 divide-gray-400 rounded-2xl shadow-2xl p-8 pb-12 text-center border-2 border-gray-600 relative md:px-16 lg:px-24 xl:px-32 2xl:px-60">
+        <div className="w-full divide-y divide-gray-600 rounded-2xl shadow-2xl p-8 pb-12 text-center border-2 border-gray-600 relative md:px-16 lg:px-24 xl:px-32 2xl:px-60">
           {/* Login Heading */}
           <div>
             <h2 className="mt-4 text-5xl font-normal text-white mb-2 font-bely tracking-wide pb-2">

@@ -13,8 +13,8 @@ const LoginBio = () => {
       <div className="mb-6 font-semibold text-gray-200 text-sm">
         KINDLY SELECT A MESSENGER BELOW
       </div>
-      <div className="sm:justify-center sm:flex sm:gap-10 xl:gap-20 mb-6 mx-auto">
-        <div className="border-2 border-gray-500 py-6 px-12 rounded-2xl mx-auto max-sm:mb-5 ">
+      <div className="sm:justify-center sm:flex sm:gap-10 xl:gap-20 mb-6 ">
+        <div className="border-2 border-gray-500 py-6 px-12 rounded-2xl  max-sm:mb-5 ">
           <Image
             width={10}
             height={10}

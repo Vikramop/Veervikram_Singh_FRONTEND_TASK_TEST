@@ -32,7 +32,9 @@ export default function OtpInput({ length = 6, onChangeOtp }: OtpInputProps) {
       {otp.map((digit, idx) => (
         <input
           key={idx}
-          ref={(el) => (inputs.current[idx] = el)}
+          ref={(el) => {
+            inputs.current[idx] = el;
+          }}
           type="text"
           inputMode="numeric"
           maxLength={1}

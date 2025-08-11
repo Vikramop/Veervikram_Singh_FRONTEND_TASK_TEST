@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import OtpInput from '../components/auth/OTPInput';
 import Image from 'next/image';
 import { useAuth } from '../context/AuthContext';
 
-const page = () => {
+const Page = () => {
   const { login } = useAuth();
   return (
     <>
@@ -89,4 +88,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

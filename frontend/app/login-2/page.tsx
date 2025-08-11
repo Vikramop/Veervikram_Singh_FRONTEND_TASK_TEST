@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import OtpInput from '../components/auth/OTPInput';
 import LoginBio from '../components/auth/LoginBio';
 import LoginSocials from '../components/auth/LoginSocials';
+import Image from 'next/image';
 
 enum TabKey {
   Passcode = 'passcode',
@@ -62,7 +63,7 @@ const Page = () => {
   const getTabTitle = (tab: TabKey) => {
     switch (tab) {
       case TabKey.Passcode:
-        return 'ONESTEP PASSCODE';
+        return 'Use OneStep Passcode to Login';
       case TabKey.Bio:
         return 'Use Onestep Biometrics to Login';
       case TabKey.Socials:
@@ -126,9 +127,105 @@ const Page = () => {
                 </div>
                 {/* Mini preview (can adjust or replace with icons) */}
                 <div className="mt-2">
-                  {tabKey === TabKey.Passcode && <span>Use Passcode</span>}
-                  {tabKey === TabKey.Bio && <span>Use Biometrics</span>}
-                  {tabKey === TabKey.Socials && <span>Login via Socials</span>}
+                  {tabKey === TabKey.Passcode && (
+                    <div className=" px-6">
+                      <div className="mb-6 px-8 text-gray-400 text-sm">
+                        Use your Onestep Passcode to enjoy fast and Easy Logins
+                      </div>
+                      <div className=" py-6 px-12 rounded-2xl  max-sm:mb-5 ">
+                        <Image
+                          width={10}
+                          height={10}
+                          src="/passcode.svg"
+                          alt="passcode"
+                          className="w-20 h-20  mx-auto pb-4"
+                        />
+                        <span className="">Passcode</span>
+                      </div>
+                      <button className="w-full text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        Onestep Passcode
+                      </button>
+                      <div className="text-md text-white mb-1 text-center my-2">
+                        Having trouble using OneStep Verification?
+                      </div>
+                      <button className="w-full bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black font-bold py-2 rounded-lg mb-3 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        HELP CENTRE
+                      </button>
+                    </div>
+                  )}
+                  {tabKey === TabKey.Bio && (
+                    <div className=" px-6">
+                      <div className="mb-6 px-8 text-gray-400 text-sm">
+                        Login into your Account made easy with the Onestep
+                        Biometrics
+                      </div>
+                      <div className="sm:justify-center sm:flex sm:gap-10 xl:gap-5  ">
+                        <div className=" py-6 px-6 rounded-2xl  max-sm:mb-5 ">
+                          <Image
+                            width={10}
+                            height={10}
+                            src="/fingerprint.svg"
+                            alt="fingerprint"
+                            className="w-20 h-20  mx-auto pb-4"
+                          />
+                          <span>Touch ID</span>
+                        </div>
+                        <div className=" py-6 px-6 rounded-2xl">
+                          <Image
+                            width={10}
+                            height={10}
+                            src="/face-id.svg"
+                            alt="face-id"
+                            className="w-20 h-20 mx-auto pb-4"
+                          />
+                          <span>Face ID</span>
+                        </div>
+                      </div>
+                      <button className="w-full text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        Onestep Biometrics
+                      </button>
+                      <div className="text-md text-white mb-1 text-center my-2">
+                        Having trouble using OneStep Verification?
+                      </div>
+                      <button className="w-full bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black font-bold py-2 rounded-lg mb-3 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        HELP CENTRE
+                      </button>
+                    </div>
+                  )}
+                  {tabKey === TabKey.Socials && (
+                    <div className=" px-6">
+                      <div className="mb-6 px-8 text-gray-400 text-sm">
+                        use your Onestep IO to login to your ECIJ Account
+                      </div>
+                      <div className="mb-6 font-semibold text-gray-200 text-lg mt-8">
+                        KINDLY SELECT A MESSENGER
+                      </div>
+
+                      {/* Telegram Button */}
+                      <button
+                        className="w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
+                        onClick={() => login('Demo User')} // Replace with your Telegram OAuth!
+                        title="Login via Telegram"
+                      >
+                        <Image
+                          width={10}
+                          height={10}
+                          src="/tele.svg"
+                          alt="Telegram"
+                          className="w-10 h-10"
+                        />
+                      </button>
+                      <button className="w-full mt-5 text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        Onestep Biometrics
+                      </button>
+                      <div className="text-md text-white mb-1 text-center my-2">
+                        Having trouble using OneStep Verification?
+                      </div>
+                      <button className="w-full bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black font-bold py-2 rounded-lg mb-3 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                        HELP CENTRE
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

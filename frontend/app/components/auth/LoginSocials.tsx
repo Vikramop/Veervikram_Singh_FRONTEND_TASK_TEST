@@ -42,7 +42,7 @@ const LoginSocials = () => {
         </a>
         <p className="mb-2">Having trouble using OneStep Verification?</p>
         {/* Help Centre Button */}
-        <button className="w-full bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black font-bold py-2 rounded-lg mb-3 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+        <button className="w-[70%] mx-auto bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black font-bold py-2 rounded-lg mb-3 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
           HELP CENTRE
         </button>
       </div>

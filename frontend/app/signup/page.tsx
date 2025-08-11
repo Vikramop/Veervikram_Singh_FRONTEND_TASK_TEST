@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useAuth } from '../context/AuthContext';
+import Link from 'next/link';
 
 const Page = () => {
   const { login } = useAuth();
@@ -10,9 +11,11 @@ const Page = () => {
       {/* Brand Logo */}
       <div className="bg-green-80 grid grid-cols-3 items-center px-4 py-2 my-4">
         {/* Left text */}
-        <div className="text-base font-bold tracking-widest text-white px-4 py-1 max-sm:text-xs">
-          Back to Login
-        </div>
+        <Link href="/login">
+          <div className="text-base font-bold tracking-widest text-white px-4 py-1 max-sm:text-xs cursor-pointer hover:underline">
+            Back to Login
+          </div>
+        </Link>
 
         {/* Center text */}
         <div className="justify-self-center text-base font-bely font-bold tracking-widest bg-gradient-to-r from-white to-purple-500 bg-clip-text text-transparent px-4 py-1 rounded-xl shadow-md max-sm:text-xs">

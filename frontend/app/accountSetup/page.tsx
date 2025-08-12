@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
+import { countryFlags, CountryPrefix } from '../types/auth';
+
 import { useRouter } from 'next/navigation';
 
 const steps = [
@@ -16,24 +18,17 @@ const steps = [
   },
 ];
 
-const countryFlags = {
-  '+234': 'NG', // Nigeria
-  '+91': 'IN', // India
-  '+1': 'US', // US
-  '+44': 'GB', // UK
-  '+61': 'AU', // Australia
-};
-
 export default function Page() {
   const [activeStep, setActiveStep] = useState(0);
   const [dob, setDob] = useState(''); // Stores the selected date
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [phone, setPhone] = useState('');
 
   const router = useRouter();
 
   const matchedCode =
-    Object.keys(countryFlags)
+    (Object.keys(countryFlags) as CountryPrefix[])
       .filter((code) => phone.startsWith(code))
       .sort((a, b) => b.length - a.length)[0] || '+234';
 

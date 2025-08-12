@@ -4,6 +4,7 @@ import OtpInput from '../components/auth/OTPInput';
 import LoginBio from '../components/auth/LoginBio';
 import LoginSocials from '../components/auth/LoginSocials';
 import Image from 'next/image';
+import { useAuth } from '../context/AuthContext';
 
 enum TabKey {
   Passcode = 'passcode',
@@ -13,7 +14,7 @@ enum TabKey {
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Passcode);
-
+  const { login } = useAuth();
   const topTab = activeTab;
   const belowTabs = [TabKey.Passcode, TabKey.Bio, TabKey.Socials].filter(
     (t) => t !== topTab

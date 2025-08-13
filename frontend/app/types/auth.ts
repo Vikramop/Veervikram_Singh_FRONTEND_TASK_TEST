@@ -12,3 +12,12 @@ export const countryFlags: Record<CountryPrefix, string> = {
   '+44': 'GB',
   '+61': 'AU',
 };
+
+export const countryList = [
+  'United States',
+  'India',
+  'Nigeria',
+  'United Kingdom',
+  'Australia',
+  'Japan',
+];

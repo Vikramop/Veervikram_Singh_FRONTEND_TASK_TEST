@@ -46,13 +46,15 @@ bot.onText(/\/start link_(.+)/, async (msg, match) => {
     user.isTelegramLinked = true;
     await user.save();
 
-    // 5. Confirmation
-    bot.sendMessage(
+    // 4. Generate & store OTP
+    const otp = otpService.generateOTP();
+    await otpService.storeOTP(user._id, otp); // stores in DB with 5-min expiry
+
+    // 5. Send OTP to Telegram user
+    await bot.sendMessage(
       chatId,
-      `✅ Telegram linked successfully to phone number *${phoneNumber}*`,
-      {
-        parse_mode: 'Markdown',
-      }
+      `✅ Telegram linked successfully to phone number *${phoneNumber}*\n\n📩 Your OneStep OTP is: *${otp}* \n\n_This code will expire in 5 minutes._`,
+      { parse_mode: 'Markdown' }
     );
   } catch (err) {
     console.error('Linking error:', err);

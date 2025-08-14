@@ -9,9 +9,10 @@ import {
 } from 'react';
 
 type AuthContextType = {
-  user: string | null;
+  user: string | null; // username or null
+  token: string | null; // auth token
   loading: boolean;
-  login: (username: string) => void;
+  login: (username: string, token: string) => void;
   logout: () => void;
 };
 
@@ -19,27 +20,37 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Simulate loading & check saved user from localStorage
+  // Load saved token & user from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('osaa_user');
-    if (savedUser) setUser(savedUser);
+    const savedToken = localStorage.getItem('authToken');
+
+    if (savedToken) {
+      setToken(savedToken);
+    }
+
     setLoading(false);
   }, []);
 
-  const login = (username: string) => {
-    setUser(username);
-    localStorage.setItem('osaa_user', username);
+  // Login: save user + token
+  const login = (token: string) => {
+    setToken(token);
+    localStorage.setItem('authToken', token);
   };
 
+  // Logout: clear everything
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('osaa_user');
+    setToken(null);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('phone');
+    window.location.href = '/login'; // <-- immediate redirect
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,6 +5,9 @@ import LoginBio from '../components/auth/LoginBio';
 import LoginSocials from '../components/auth/LoginSocials';
 import Image from 'next/image';
 import { useAuth } from '../context/AuthContext';
+import Link from 'next/link';
+import { loginWithPasscode, verifyOtp } from '../api/authApi';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 enum TabKey {
   Passcode = 'passcode',
@@ -14,7 +17,47 @@ enum TabKey {
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Passcode);
+  const [otp, setOtp] = useState('');
+  const [passcode, setPasscode] = useState('');
   const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const params = useSearchParams();
+  const phone = params.get('phone');
+
+  const handleVerifyPasscode = async () => {
+    if (!passcode || passcode.length < 4) {
+      // adjust length as needed
+      alert('Please enter your passcode.');
+      return;
+    }
+
+    if (!phone) {
+      alert('Phone number is missing.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // 🔹 Call backend to verify passcode login
+      const result = await loginWithPasscode({ phoneNumber: phone, passcode });
+
+      // 🔹 Save token if returned
+      if (result.token) {
+        localStorage.setItem('authToken', result.token);
+      }
+
+      // 🔹 Redirect to home/dashboard
+      router.push('/');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const topTab = activeTab;
   const belowTabs = [TabKey.Passcode, TabKey.Bio, TabKey.Socials].filter(
     (t) => t !== topTab
@@ -34,13 +77,14 @@ const Page = () => {
             </div>
 
             <p className="my-6">5 Minutes</p>
-            <OtpInput length={6} onChangeOtp={(otp) => console.log(otp)} />
-            <a
-              href="/signup"
+            <OtpInput length={6} onChangeOtp={setPasscode} />
+            <Link
+              onClick={handleVerifyPasscode}
+              href="/"
               className="xl:w-[60%] mx-auto block bg-gradient-to-r from-yellow-700 via-yellow-300 to-yellow-700 text-black py-2 mt-2 rounded-lg font-bold text-base hover:from-yellow-300 hover:to-yellow-400 transition-all"
             >
               Proceed
-            </a>
+            </Link>
             <div className="text-md text-white mb-1 text-center mt-4">
               Can&apos;t remember your Passcode?{' '}
               <a
@@ -247,12 +291,12 @@ const Page = () => {
 
           <div className="mb-2 text-white pt-3 text-xs">Are you new Here?</div>
 
-          <a
-            href="/signup"
+          <Link
+            href="/"
             className="w-full block bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black py-2 mt-2 rounded-lg font-bold text-base hover:from-yellow-300 hover:to-yellow-400 transition-all"
           >
             SIGN UP
-          </a>
+          </Link>
         </div>
       </div>
     </>

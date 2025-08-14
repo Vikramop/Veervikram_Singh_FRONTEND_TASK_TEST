@@ -2,9 +2,40 @@
 
 import Image from 'next/image';
 import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import { countryFlags, CountryPrefix } from '@/app/types/auth';
+import { requestOtp } from '@/app/api/authApi';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
   const { login } = useAuth();
+  const [phone, setPhone] = useState('');
+  const router = useRouter();
+
+  const matchedCode =
+    (Object.keys(countryFlags) as CountryPrefix[])
+      .filter((code) => phone.startsWith(code))
+      .sort((a, b) => b.length - a.length)[0] || '+234';
+
+  const isoCode = countryFlags[matchedCode] || 'NG';
+
+  const handleTelegramClick = async () => {
+    if (!phone) {
+      alert('Please enter your phone number before continuing.');
+      return;
+    }
+
+    try {
+      // 1️⃣ Request the OTP from backend
+      await requestOtp(phone);
+      console.log('OTP requested successfully for', phone);
+
+      // 2️⃣ Redirect to /login-2
+      router.push(`/login-2?phone=${encodeURIComponent(phone)}`);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
     <>
@@ -49,9 +80,47 @@ export default function LoginForm() {
           </div>
 
           {/* Telegram Button */}
+          <div className="relative z-0 w-full mb-6 group rounded-md border-2 border-gray-600 ">
+            {/* Label floated above */}
+            <label
+              htmlFor="phone"
+              className="absolute text-xs font-semibold tracking-wider uppercase top-2 z-10 origin-[0] left-4 text-gray-400 pointer-events-none"
+            >
+              Phone Number
+            </label>
+
+            <div className="flex items-center text-white mt-6 px-3">
+              {/* Dynamic country flag */}
+              <span className="w-6 h-6 mr-3">
+                <Image
+                  src={`/${isoCode}.svg`}
+                  alt={isoCode}
+                  className="w-full h-full object-contain"
+                  width={10}
+                  height={10}
+                />
+              </span>
+
+              {/* Vertical Divider */}
+              <div className="w-px h-6 bg-gray-600 mx-3" />
+
+              {/* Input field bound to state */}
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                value={phone} // <-- bind to state
+                onChange={(e) => setPhone(e.target.value)} // <-- update state
+                className="flex-1 bg-transparent focus:outline-none text-lg placeholder-gray-500"
+                placeholder="phone number"
+                required
+                autoComplete="off"
+              />
+            </div>
+          </div>
           <button
-            className="w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
-            onClick={() => login('Demo User')} // Replace with your Telegram OAuth!
+            onClick={handleTelegramClick}
+            className="cursor-pointer w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
             title="Login via Telegram"
           >
             <Image

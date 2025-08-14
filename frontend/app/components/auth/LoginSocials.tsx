@@ -1,9 +1,33 @@
+import { requestOtp } from '@/app/api/authApi';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 const LoginSocials = () => {
   const { login } = useAuth();
+  const router = useRouter();
+
+  const params = useSearchParams();
+  const phone = params.get('phone');
+
+  const handleTelegramClick = async () => {
+    if (!phone) {
+      alert('Please enter your phone number before continuing.');
+      return;
+    }
+
+    try {
+      // 1️⃣ Request the OTP from backend
+
+      console.log('OTP requested successfully for', phone);
+
+      // 2️⃣ Redirect to /login-2
+      router.push(`/verification?phone=${encodeURIComponent(phone)}`);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
   return (
     <div>
       <div className="w-full pb-2 text-center  relative ">
@@ -21,7 +45,7 @@ const LoginSocials = () => {
         {/* Telegram Button */}
         <button
           className="w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
-          onClick={() => login('Demo User')} // Replace with your Telegram OAuth!
+          onClick={handleTelegramClick} // Replace with your Telegram OAuth!
           title="Login via Telegram"
         >
           <Image

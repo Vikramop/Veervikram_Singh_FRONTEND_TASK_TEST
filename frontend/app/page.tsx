@@ -1,25 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './context/AuthContext';
 import Dashboard from './components/Dashboard/page';
 
 export default function HomePage() {
-  const { user, loading } = useAuth();
   const router = useRouter();
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // If NOT logged in and not loading, redirect to login
-    if (!loading && !user) {
-      router.replace('/login');
-    }
-  }, [user, loading, router]);
+    if (typeof window === 'undefined') return;
 
-  if (loading) {
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      setHasToken(true); // ✅ Show dashboard
+    } else {
+      router.replace('/login'); // ❌ No token → go to login
+    }
+  }, [router]);
+
+  // While we're checking token
+  if (hasToken === null) {
     return <div className="text-center mt-10 text-white">Loading...</div>;
   }
 
-  // Only show Dashboard if logged in (otherwise, redirect will trigger)
-  return user ? <Dashboard /> : null;
+  // Render dashboard if token exists
+  return hasToken ? <Dashboard /> : null;
 }

@@ -39,13 +39,6 @@ async function signup(data) {
 
   await user.save();
 
-  // If Telegram already linked (rare at signup)
-  if (user.telegramChatId) {
-    const otp = generateOTP();
-    await storeOTP(user._id, otp);
-    await sendOTP(user.telegramChatId, otp);
-  }
-
   return user;
 }
 
@@ -56,8 +49,9 @@ function generateToken(user) {
   });
 }
 
-async function loginWithPasscode(username, passcode) {
-  const user = await User.findOne({ username });
+async function loginWithPasscode(phoneNumber, passcode) {
+  // ✅ Find user by phoneNumber
+  const user = await User.findOne({ phoneNumber });
   if (!user) throw new Error('User not found');
 
   const passcodeMatch = await comparePasscode(passcode, user.passcode);

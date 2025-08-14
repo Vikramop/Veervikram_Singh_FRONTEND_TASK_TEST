@@ -10,7 +10,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 exports.signup = async (req, res) => {
   try {
     const user = await authService.signup(req.body);
-    res.status(201).json({ message: 'User created', username: user.username });
+    res.status(201).json({
+      message: 'User created',
+      name: user.name,
+      phoneNumber: user.phoneNumber,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -52,11 +56,13 @@ exports.requestOtp = async (req, res) => {
 // 📌 Passcode login
 exports.loginWithPasscode = async (req, res) => {
   try {
-    const { username, passcode } = req.body;
+    const { phoneNumber, passcode } = req.body; // ✅ use phoneNumber instead of username
+
     const { user, token } = await authService.loginWithPasscode(
-      username,
+      phoneNumber,
       passcode
     );
+
     res.json({ token, user });
   } catch (err) {
     res.status(400).json({ error: err.message });

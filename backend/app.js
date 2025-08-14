@@ -9,7 +9,13 @@ const multer = require('multer');
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    // origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Multer setup to receive photo uploads (profile + identity photos)

@@ -1,16 +1,62 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import OtpInput from '../components/auth/OTPInput';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { verifyOtp } from '../api/authApi';
 
-const page = () => {
+const Page = () => {
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 🔹 Try to get phone from URL first (login flow), otherwise from localStorage (signup flow)
+  const phone =
+    searchParams.get('phone') ||
+    (typeof window !== 'undefined' && localStorage.getItem('phone'));
+
+  console.log('Phone being used for OTP verification:', phone);
+
+  const handleVerify = async () => {
+    if (!otp || otp.length !== 6) {
+      alert('Please enter your 6-digit OTP.');
+      return;
+    }
+
+    if (!phone) {
+      alert('Phone number is missing.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const result = await verifyOtp(phone, otp); // calls your API
+
+      if (result.token) {
+        localStorage.setItem('authToken', result.token);
+      }
+
+      router.push('/'); // ✅ redirect to home after successful verification
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Brand Logo */}
       <div className="bg-green-80 grid grid-cols-3 items-center px-4 py-2 my-4">
         {/* Left text */}
-        <div className="text-base font-bold tracking-widest text-white px-4 py-1 max-sm:text-xs">
-          Back
-        </div>
+        <Link href="/login">
+          <div className="text-base font-bold tracking-widest text-white px-4 py-1 max-sm:text-xs cursor-pointer hover:underline">
+            Back to Login
+          </div>
+        </Link>
 
         {/* Center text */}
         <div className="justify-self-center text-base font-bely font-bold tracking-widest bg-gradient-to-r from-white to-purple-500 bg-clip-text text-transparent px-4 py-1 rounded-xl shadow-md max-sm:text-xs">
@@ -44,15 +90,22 @@ const page = () => {
 
           <div>
             <p className="my-6">5 Minutes</p>
-            <OtpInput length={6} onChangeOtp={(otp) => console.log(otp)} />
+            <OtpInput length={6} onChangeOtp={setOtp} />
             {/* otp enter sec */}
 
-            <a
-              href="/signup"
+            <button
+              onClick={handleVerify}
+              disabled={loading}
+              className="w-full block bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black py-2 mt-2 rounded-lg font-bold text-base hover:from-yellow-300 hover:to-yellow-400 transition-all"
+            >
+              {loading ? 'Verifying...' : 'Proceed'}
+            </button>
+            {/* <Link
+              href="/"
               className="w-full block bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black py-2 mt-2 rounded-lg font-bold text-base hover:from-yellow-300 hover:to-yellow-400 transition-all"
             >
               Proceed
-            </a>
+            </Link> */}
             <div className="text-md text-white mb-1 text-center mt-4">
               Didn&apos;t receive your OTP?{' '}
               <a
@@ -81,4 +134,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

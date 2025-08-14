@@ -87,6 +87,24 @@ exports.loginWithOtpOnly = async (req, res) => {
   }
 };
 
+exports.verifyOtpHandler = async (req, res) => {
+  try {
+    const { phoneNumber, otp } = req.body;
+
+    // Find the user by phone number
+    const user = await User.findOne({ phoneNumber });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const result = await otpService.validateOTP(phoneNumber, otp);
+
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 // 📌 Protected Profile
 exports.getProfile = async (req, res) => {
   try {
@@ -104,20 +122,41 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.verifyOtpHandler = async (req, res) => {
+exports.updateProfile = async (req, res) => {
   try {
-    const { phoneNumber, otp } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      country,
+      city,
+      address,
+      address2,
+      zip,
+      photoOfIdentity,
+      photoOfUserWithIdentity,
+    } = req.body;
 
-    // Find the user by phone number
-    const user = await User.findOne({ phoneNumber });
-    if (!user) {
+    const updatedUser = await updateUserProfile(req.user.id, {
+      firstName,
+      lastName,
+      email,
+      country,
+      city,
+      address,
+      address2,
+      zip,
+      photoOfIdentity,
+      photoOfUserWithIdentity,
+    });
+
+    if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const result = await otpService.validateOTP(phoneNumber, otp);
-
-    res.status(200).json(result);
+    res.json(updatedUser);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error('Error updating profile:', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 };

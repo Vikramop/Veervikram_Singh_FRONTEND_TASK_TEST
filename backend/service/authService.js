@@ -74,10 +74,19 @@ async function getUserProfile(userId) {
   return User.findById(userId).select('-passcode');
 }
 
+async function updateUserProfile(userId, updates) {
+  return User.findByIdAndUpdate(
+    userId,
+    { $set: updates },
+    { new: true }
+  ).select('-password -passcode'); // hide sensitive fields
+}
+
 module.exports = {
   signup,
   loginWithPasscode,
   loginWithOtpOnly,
   getUserProfile,
   generateToken,
+  updateUserProfile,
 };

@@ -63,3 +63,24 @@ export async function getProfile() {
   });
   return res.json();
 }
+
+export async function updateProfile(profileData) {
+  const token = localStorage.getItem('authToken'); // or wherever you store it
+
+  const res = await fetch(`${BASE_URL}/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    body: JSON.stringify(profileData),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to update profile');
+  }
+
+  return data; // returns the updated user profile
+}

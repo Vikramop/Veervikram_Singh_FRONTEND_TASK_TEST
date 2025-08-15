@@ -4,9 +4,8 @@ import OtpInput from '../components/auth/OTPInput';
 import LoginBio from '../components/auth/LoginBio';
 import LoginSocials from '../components/auth/LoginSocials';
 import Image from 'next/image';
-import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
-import { loginWithPasscode, verifyOtp } from '../api/authApi';
+import { loginWithPasscode } from '../api/authApi';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 enum TabKey {
@@ -17,10 +16,8 @@ enum TabKey {
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Passcode);
-  const [otp, setOtp] = useState('');
   const [passcode, setPasscode] = useState('');
-  const { login } = useAuth();
-  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const params = useSearchParams();
@@ -39,8 +36,6 @@ const Page = () => {
     }
 
     try {
-      setLoading(true);
-
       // 🔹 Call backend to verify passcode login
       const result = await loginWithPasscode({ phoneNumber: phone, passcode });
 
@@ -51,10 +46,12 @@ const Page = () => {
 
       // 🔹 Redirect to home/dashboard
       router.push('/');
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert('An unknown error occurred');
+      }
     }
   };
 
@@ -249,7 +246,6 @@ const Page = () => {
                       {/* Telegram Button */}
                       <button
                         className="w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
-                        onClick={() => login('Demo User')} // Replace with your Telegram OAuth!
                         title="Login via Telegram"
                       >
                         <Image

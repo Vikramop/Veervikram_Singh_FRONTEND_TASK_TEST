@@ -40,9 +40,12 @@ const Page = () => {
       }
 
       router.push('/'); // ✅ redirect to home after successful verification
-    } catch (err) {
-      alert(err.message);
-    } finally {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert('An unknown error occurred');
+      }
       setLoading(false);
     }
   };

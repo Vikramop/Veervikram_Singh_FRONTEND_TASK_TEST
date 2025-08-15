@@ -48,6 +48,7 @@ export default function Page() {
       try {
         verifyFileBase64 = await fileToBase64(verifyFile);
       } catch (e) {
+        console.error('Failed to read verification file', e);
         alert('Failed to read verification file');
         return;
       }
@@ -74,8 +75,12 @@ export default function Page() {
       await updateProfile(payload); // your API helper
       alert('Profile updated successfully!');
       router.push('/profile');
-    } catch (err: any) {
-      alert('Failed to update profile: ' + err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert('Failed to update profile: ' + err.message);
+      } else {
+        alert('Failed to update profile.');
+      }
     }
   };
 

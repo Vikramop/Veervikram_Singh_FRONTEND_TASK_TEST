@@ -19,8 +19,12 @@ const PhotoId: React.FC<PhotoIdProps> = ({ photoDataUrl, setPhotoDataUrl }) => {
         video: true,
       });
       setStream(currentStream);
-    } catch (err: any) {
-      alert('Error accessing webcam: ' + err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert('Error accessing webcam: ' + err.message);
+      } else {
+        alert('Error accessing webcam.');
+      }
     }
   }
 

@@ -1,14 +1,12 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { requestOtp } from '@/app/api/authApi';
 
 const Page = () => {
-  const { login } = useAuth();
   const router = useRouter();
 
   const params = useSearchParams();

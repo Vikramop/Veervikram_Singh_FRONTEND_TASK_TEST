@@ -1,14 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import { countryFlags, CountryPrefix } from '@/app/types/auth';
 import { requestOtp } from '@/app/api/authApi';
 import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
-  const { login } = useAuth();
   const [phone, setPhone] = useState('');
   const router = useRouter();
 
@@ -26,14 +24,17 @@ export default function LoginForm() {
     }
 
     try {
-      // 1️⃣ Request the OTP from backend
+      // Request the OTP from backend
       await requestOtp(phone);
       console.log('OTP requested successfully for', phone);
-
-      // 2️⃣ Redirect to /login-2
-      router.push(`/login-2?phone=${encodeURIComponent(phone)}`);
-    } catch (err) {
-      alert(err.message);
+      // Redirect to /login-2
+      router.push(`/login-2/${encodeURIComponent(phone)}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert('An unknown error occurred');
+      }
     }
   };
 

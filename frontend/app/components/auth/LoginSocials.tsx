@@ -1,11 +1,8 @@
-import { requestOtp } from '@/app/api/authApi';
-import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 const LoginSocials = () => {
-  const { login } = useAuth();
   const router = useRouter();
 
   const params = useSearchParams();
@@ -24,8 +21,12 @@ const LoginSocials = () => {
 
       // 2️⃣ Redirect to /login-2
       router.push(`/verification?phone=${encodeURIComponent(phone)}`);
-    } catch (err) {
-      alert(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert('An unknown error occurred');
+      }
     }
   };
   return (

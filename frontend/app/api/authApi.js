@@ -1,5 +1,5 @@
-// src/api/authApi.js
-const BASE_URL = 'http://localhost:5000/api/auth'; // Your backend's base URL
+// Your backend's base URL
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // SIGNUP
 export async function signup(userData) {
@@ -82,5 +82,5 @@ export async function updateProfile(profileData) {
     throw new Error(data.error || 'Failed to update profile');
   }
 
-  return data; // returns the updated user profile
+  return data;
 }

@@ -38,7 +38,7 @@ export default function Page() {
   const isoCode = countryFlags[matchedCode] || 'NG';
 
   // Handle final signup API call
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('gg');
 
@@ -57,8 +57,12 @@ export default function Page() {
       router.push(
         `/signup/telegramLink?phone=${encodeURIComponent(res.phoneNumber)}`
       );
-    } catch (err) {
-      alert(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert('An unknown error occurred');
+      }
     }
   };
 

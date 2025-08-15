@@ -1,9 +1,18 @@
-import Image from 'next/image';
-import { useRef, useState } from 'react';
+'use client';
 
-const VerifyIdentity = () => {
+import Image from 'next/image';
+import React, { useRef, useState } from 'react';
+
+interface VerifyIdentityProps {
+  selectedFile: File | null;
+  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
+}
+
+const VerifyIdentity: React.FC<VerifyIdentityProps> = ({
+  selectedFile,
+  setSelectedFile,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -12,7 +21,7 @@ const VerifyIdentity = () => {
   }
 
   return (
-    <div className="flex  flex-col -translate-y-1/2 absolute top-1/2 left-1/2 -translate-x-1/2 items-center justify-center p-6 bg-gray-100 rounded-lg w-fit mx-auto ">
+    <div className="flex flex-col -translate-y-1/2 absolute top-1/2 left-1/2 -translate-x-1/2 items-center justify-center p-6 bg-gray-100 rounded-lg w-fit mx-auto ">
       <p className="text-base font-semibold text-gray-700 mb-2">
         {selectedFile
           ? 'File selected:'
@@ -39,7 +48,6 @@ const VerifyIdentity = () => {
         onChange={handleFileChange}
       />
 
-      {/* Optional: show preview if image */}
       {selectedFile && selectedFile.type.startsWith('image/') && (
         <Image
           src={URL.createObjectURL(selectedFile)}

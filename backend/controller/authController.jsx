@@ -137,7 +137,7 @@ exports.updateProfile = async (req, res) => {
       photoOfUserWithIdentity,
     } = req.body;
 
-    const updatedUser = await updateUserProfile(req.user.id, {
+    const updatedUser = await authService.updateUserProfile(req.user.id, {
       firstName,
       lastName,
       email,

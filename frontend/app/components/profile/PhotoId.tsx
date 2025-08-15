@@ -1,11 +1,17 @@
+'use client';
+
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
 
-const PhotoId = () => {
+interface PhotoIdProps {
+  photoDataUrl: string | null;
+  setPhotoDataUrl: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const PhotoId: React.FC<PhotoIdProps> = ({ photoDataUrl, setPhotoDataUrl }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
 
   async function startCamera() {
     try {
@@ -13,12 +19,11 @@ const PhotoId = () => {
         video: true,
       });
       setStream(currentStream);
-    } catch (err) {
-      alert('Error accessing webcam: ' + (err as Error).message);
+    } catch (err: any) {
+      alert('Error accessing webcam: ' + err.message);
     }
   }
 
-  // Effect to update video element when stream changes
   useEffect(() => {
     if (stream && videoRef.current) {
       videoRef.current.srcObject = stream;

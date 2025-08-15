@@ -1,5 +1,6 @@
 'use client';
 
+import { updateProfile } from '@/app/api/authApi';
 import PersonalInfo from '@/app/components/profile/PersonalInfo';
 import PhotoId from '@/app/components/profile/PhotoId';
 import VerifyIdentity from '@/app/components/profile/VerifyIdentity';
@@ -16,6 +17,67 @@ const steps = [
 export default function Page() {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
+  const [personalInfo, setPersonalInfo] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    country: '',
+    city: '',
+    address: '',
+    address2: '',
+    zip: '',
+  });
+
+  const [verifyFile, setVerifyFile] = useState<File | null>(null);
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
+
+  const handleFinish = async () => {
+    // Utility to convert File to base64 string
+    const fileToBase64 = (file: File): Promise<string> => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+    };
+
+    // Convert verifyFile (if present) to base64
+    let verifyFileBase64: string | null = null;
+    if (verifyFile) {
+      try {
+        verifyFileBase64 = await fileToBase64(verifyFile);
+      } catch (e) {
+        alert('Failed to read verification file');
+        return;
+      }
+    }
+
+    // Build payload object using collected data
+    const payload = {
+      firstName: personalInfo.firstname,
+      lastName: personalInfo.lastname,
+      email: personalInfo.email,
+      country: personalInfo.country,
+      city: personalInfo.city,
+      address: personalInfo.address,
+      address2: personalInfo.address2,
+      zip: personalInfo.zip,
+      photoOfIdentity: verifyFileBase64, // file -> base64 string
+      photoOfUserWithIdentity: photoDataUrl, // already a base64 string
+    };
+
+    // Optional: log for final check
+    console.log('Final payload sent to backend:', payload);
+
+    try {
+      await updateProfile(payload); // your API helper
+      alert('Profile updated successfully!');
+      router.push('/profile');
+    } catch (err: any) {
+      alert('Failed to update profile: ' + err.message);
+    }
+  };
 
   // Dynamic header and body for each step
   const stepHeaders = [
@@ -25,13 +87,16 @@ export default function Page() {
   ];
   const stepBodies = [
     <div key="1">
-      <PersonalInfo />
+      <PersonalInfo data={personalInfo} setData={setPersonalInfo} />
     </div>,
     <div key="2">
-      <VerifyIdentity />
+      <VerifyIdentity
+        selectedFile={verifyFile}
+        setSelectedFile={setVerifyFile}
+      />
     </div>,
     <div key="3">
-      <PhotoId />
+      <PhotoId photoDataUrl={photoDataUrl} setPhotoDataUrl={setPhotoDataUrl} />
     </div>,
   ];
 
@@ -95,8 +160,11 @@ export default function Page() {
           <button
             className="w-1/2 py-2 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-bold uppercase  hover:from-yellow-300 hover:to-yellow-400 transition"
             onClick={() => {
-              if (activeStep < steps.length - 1) setActiveStep(activeStep + 1);
-              else alert('KYC Complete!'); // replace with next step or redirect
+              if (activeStep < steps.length - 1) {
+                setActiveStep(activeStep + 1);
+              } else {
+                handleFinish(); // ✅ Now calling the function instead of alert
+              }
             }}
           >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}

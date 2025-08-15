@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controller/authController.jsx');
+const authMiddleware = require('../middleware/authMiddleware.js');
 
 // Signup
 router.post('/signup', authController.signup);
@@ -17,5 +18,6 @@ router.post('/verify-otp', authController.verifyOtpHandler);
 
 // Get Profile (Protected)
 router.get('/profile', authController.getProfile);
+router.put('/profile', authMiddleware, authController.updateProfile);
 
 module.exports = router;

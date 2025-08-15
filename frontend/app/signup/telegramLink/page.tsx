@@ -1,14 +1,14 @@
 'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
 import { useSearchParams, useRouter } from 'next/navigation';
 import { requestOtp } from '@/app/api/authApi';
+import { Suspense } from 'react';
 
-const Page = () => {
+function TelegramLinkContent() {
   const router = useRouter();
-
   const params = useSearchParams();
   const phone = params.get('phone');
 
@@ -59,8 +59,8 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-4/5   sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-3/5 2xl:w-3/5 mx-auto rounded-2xl shadow-2xl  relative  mt-12 max-sm:mb-4">
-        <div className="w-full  rounded-2xl shadow-2xl p-8 pb-12 text-center border-2 border-gray-600 relative md:px-16 lg:px-24 xl:px-32 2xl:px-60">
+      <div className="w-4/5 sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-3/5 2xl:w-3/5 mx-auto rounded-2xl shadow-2xl relative mt-12 max-sm:mb-4">
+        <div className="w-full rounded-2xl shadow-2xl p-8 pb-12 text-center border-2 border-gray-600 relative md:px-16 lg:px-24 xl:px-32 2xl:px-60">
           {/* Login Heading */}
           <div>
             <h2 className="mt-4 text-5xl font-normal text-white mb-2 font-bely tracking-wide pb-2">
@@ -69,19 +69,15 @@ const Page = () => {
             <p className="text-xl font-normal text-gray-300 mb-4 text-center font-bely ">
               Complete Onestep verification
             </p>
-
             {/* Sub instructions */}
-
             <div className="mb-6 text-gray-400 text-sm divide-amber-50 divide-y-2">
               Complete the OneStep verification to proceed. If you don&apos;t
               have one already. It is important for account verification
             </div>
           </div>
-
           <div className="mb-6 font-semibold text-gray-200 text-lg mt-8">
             KINDLY SELECT A MESSENGER
           </div>
-
           {/* Telegram Button */}
           <button
             className="w-15 h-15 flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 transition-all rounded-2xl shadow-lg mx-auto mb-3"
@@ -110,8 +106,6 @@ const Page = () => {
         </div>
       </div>
 
-      {/* /////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-
       <div className="text-md text-white mb-1 text-center mt-8">
         By using Login you agree to our{' '}
         <a href="#" className="text-yellow-600 underline hover:text-purple-200">
@@ -120,6 +114,12 @@ const Page = () => {
       </div>
     </>
   );
-};
+}
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <TelegramLinkContent />
+  </Suspense>
+);
 
 export default Page;

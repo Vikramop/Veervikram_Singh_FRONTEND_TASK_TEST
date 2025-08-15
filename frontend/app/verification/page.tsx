@@ -1,21 +1,21 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useState, Suspense } from 'react';
 import OtpInput from '../components/auth/OTPInput';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { verifyOtp } from '../api/authApi';
 
-const Page = () => {
+function OtpVerificationContent() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // 🔹 Try to get phone from URL first (login flow), otherwise from localStorage (signup flow)
   const phone =
     searchParams.get('phone') ||
-    (typeof window !== 'undefined' && localStorage.getItem('phone'));
+    (typeof window !== 'undefined' ? localStorage.getItem('phone') : null);
 
   console.log('Phone being used for OTP verification:', phone);
 
@@ -33,13 +33,13 @@ const Page = () => {
     try {
       setLoading(true);
 
-      const result = await verifyOtp(phone, otp); // calls your API
+      const result = await verifyOtp(phone, otp);
 
       if (result.token) {
         localStorage.setItem('authToken', result.token);
       }
 
-      router.push('/'); // ✅ redirect to home after successful verification
+      router.push('/'); // Redirect after successful verification
     } catch (err: unknown) {
       if (err instanceof Error) {
         alert(err.message);
@@ -72,7 +72,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-4/5   sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-3/5 2xl:w-3/5 mx-auto rounded-2xl shadow-2xl  relative  mt-12 max-sm:mb-4">
+      <div className="w-4/5 sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-3/5 2xl:w-3/5 mx-auto rounded-2xl shadow-2xl relative mt-12 max-sm:mb-4">
         <div className="w-full divide-y divide-gray-600 rounded-2xl shadow-2xl p-8 pb-12 text-center border-2 border-gray-600 relative md:px-16 lg:px-24 xl:px-32 2xl:px-60">
           {/* Login Heading */}
           <div>
@@ -85,7 +85,6 @@ const Page = () => {
             </p>
 
             {/* Sub instructions */}
-
             <div className="mb-6 text-gray-400 text-sm divide-amber-50 divide-y-2">
               Enter the OTP verification code Sent to you
             </div>
@@ -94,7 +93,6 @@ const Page = () => {
           <div>
             <p className="my-6">5 Minutes</p>
             <OtpInput length={6} onChangeOtp={setOtp} />
-            {/* otp enter sec */}
 
             <button
               onClick={handleVerify}
@@ -103,12 +101,7 @@ const Page = () => {
             >
               {loading ? 'Verifying...' : 'Proceed'}
             </button>
-            {/* <Link
-              href="/"
-              className="w-full block bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 text-black py-2 mt-2 rounded-lg font-bold text-base hover:from-yellow-300 hover:to-yellow-400 transition-all"
-            >
-              Proceed
-            </Link> */}
+
             <div className="text-md text-white mb-1 text-center mt-4">
               Didn&apos;t receive your OTP?{' '}
               <a
@@ -120,8 +113,6 @@ const Page = () => {
             </div>
           </div>
         </div>
-
-        {/* /////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
         <div className="text-md text-white mb-1 text-center mt-8">
           By using Login you agree to our{' '}
@@ -135,6 +126,12 @@ const Page = () => {
       </div>
     </>
   );
-};
+}
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpVerificationContent />
+    </Suspense>
+  );
+}

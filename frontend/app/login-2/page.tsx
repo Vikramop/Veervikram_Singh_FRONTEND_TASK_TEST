@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useState, Suspense } from 'react';
 import OtpInput from '../components/auth/OTPInput';
 import LoginBio from '../components/auth/LoginBio';
 import LoginSocials from '../components/auth/LoginSocials';
@@ -14,18 +15,16 @@ enum TabKey {
   Socials = 'socials',
 }
 
-const Page = () => {
+function LoginContent() {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Passcode);
   const [passcode, setPasscode] = useState('');
 
   const router = useRouter();
-
   const params = useSearchParams();
   const phone = params.get('phone');
 
   const handleVerifyPasscode = async () => {
     if (!passcode || passcode.length < 4) {
-      // adjust length as needed
       alert('Please enter your passcode.');
       return;
     }
@@ -161,30 +160,30 @@ const Page = () => {
             {belowTabs.map((tabKey) => (
               <div
                 key={tabKey}
-                className="flex-1 py-6 text-white  text-center cursor-pointer hover:bg-gray-800 transition"
+                className="flex-1 py-6 text-white text-center cursor-pointer hover:bg-gray-800 transition"
                 onClick={() => setActiveTab(tabKey)}
               >
-                <div className="mb-2  text-md text-white font-bely font-thin text-xl">
+                <div className="mb-2 text-md text-white font-bely font-thin text-xl">
                   {getTabTitle(tabKey)}
                 </div>
                 {/* Mini preview (can adjust or replace with icons) */}
                 <div className="mt-2">
                   {tabKey === TabKey.Passcode && (
-                    <div className=" px-6">
+                    <div className="px-6">
                       <div className="mb-6 px-8 text-gray-400 text-sm">
                         Use your Onestep Passcode to enjoy fast and Easy Logins
                       </div>
-                      <div className=" py-6 px-12 rounded-2xl  max-sm:mb-5 ">
+                      <div className="py-6 px-12 rounded-2xl max-sm:mb-5">
                         <Image
                           width={10}
                           height={10}
                           src="/passcode.svg"
                           alt="passcode"
-                          className="w-20 h-20  mx-auto pb-4"
+                          className="w-20 h-20 mx-auto pb-4"
                         />
-                        <span className="">Passcode</span>
+                        <span>Passcode</span>
                       </div>
-                      <button className="w-full text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                      <button className="w-full text-white bg-[#592F73] font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
                         Onestep Passcode
                       </button>
                       <div className="text-md text-white mb-1 text-center my-2">
@@ -196,23 +195,23 @@ const Page = () => {
                     </div>
                   )}
                   {tabKey === TabKey.Bio && (
-                    <div className=" px-6">
+                    <div className="px-6">
                       <div className="mb-6 px-8 text-gray-400 text-sm">
                         Login into your Account made easy with the Onestep
                         Biometrics
                       </div>
-                      <div className="sm:justify-center sm:flex sm:gap-10 xl:gap-5  ">
-                        <div className=" py-6 px-6 rounded-2xl  max-sm:mb-5 ">
+                      <div className="sm:flex sm:justify-center sm:gap-10 xl:gap-5">
+                        <div className="py-6 px-6 rounded-2xl max-sm:mb-5">
                           <Image
                             width={10}
                             height={10}
                             src="/fingerprint.svg"
                             alt="fingerprint"
-                            className="w-20 h-20  mx-auto pb-4"
+                            className="w-20 h-20 mx-auto pb-4"
                           />
                           <span>Touch ID</span>
                         </div>
-                        <div className=" py-6 px-6 rounded-2xl">
+                        <div className="py-6 px-6 rounded-2xl">
                           <Image
                             width={10}
                             height={10}
@@ -223,7 +222,7 @@ const Page = () => {
                           <span>Face ID</span>
                         </div>
                       </div>
-                      <button className="w-full text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                      <button className="w-full text-white bg-[#592F73] font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
                         Onestep Biometrics
                       </button>
                       <div className="text-md text-white mb-1 text-center my-2">
@@ -235,7 +234,7 @@ const Page = () => {
                     </div>
                   )}
                   {tabKey === TabKey.Socials && (
-                    <div className=" px-6">
+                    <div className="px-6">
                       <div className="mb-6 px-8 text-gray-400 text-sm">
                         use your Onestep IO to login to your ECIJ Account
                       </div>
@@ -256,7 +255,7 @@ const Page = () => {
                           className="w-10 h-10"
                         />
                       </button>
-                      <button className="w-full mt-5 text-white bg-[#592F73]  font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
+                      <button className="w-full mt-5 text-white bg-[#592F73] font-bold py-2 rounded-lg mb-1 text-base hover:from-yellow-300 hover:to-yellow-400 transition-all">
                         Onestep Biometrics
                       </button>
                       <div className="text-md text-white mb-1 text-center my-2">
@@ -297,6 +296,12 @@ const Page = () => {
       </div>
     </>
   );
-};
+}
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
